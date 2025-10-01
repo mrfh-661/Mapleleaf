@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mapleleaf - 强大的Minecraft客户端</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍁</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0f0a 0%, #0f1a0f 50%, #152015 100%);
+            color: #e0f7e0;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(20, 30, 20, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #8bc34a, #4caf50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #8bc34a;
+        }
+        
+        .description {
+            font-size: 1rem;
+            max-width: 100%;
+            margin: 0 auto;
+            opacity: 0.9;
+            padding: 0 10px;
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(76, 175, 80, 0.5), transparent);
+            margin: 30px 0;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #8bc34a;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+        
+        .feature-item {
+            margin-bottom: 18px;
+            padding: 15px;
+            background: rgba(30, 40, 30, 0.5);
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-item:hover, .feature-item:active {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #8bc34a;
+        }
+        
+        .feature-desc {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .price-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(46, 125, 50, 0.15);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .price-info {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .price-highlight {
+            color: #8bc34a;
+            font-weight: bold;
+        }
+        
+        .purchase-button {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            width: 100%;
+            max-width: 250px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .purchase-button:hover, .purchase-button:active {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .jump-tips {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(76, 175, 80, 0.3);
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+        
+        /* 代理选择界面样式 */
+        .agent-selection {
+            display: none;
+            text-align: center;
+        }
+        
+        .agent-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #8bc34a;
+        }
+        
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .agent-item {
+            padding: 18px;
+            background: rgba(30, 40, 30, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .agent-item:hover, .agent-item:active {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(46, 125, 50, 0.2);
+        }
+        
+        .agent-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #8bc34a;
+        }
+        
+        .agent-role {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .back-button {
+            background: transparent;
+            color: #8bc34a;
+            border: 1px solid #8bc34a;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .back-button:hover, .back-button:active {
+            background: rgba(139, 195, 74, 0.1);
+        }
+        
+        /* 防止缩放但允许滚动 */
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: pan-y;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .container {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .feature-item {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .feature-item:nth-child(1) { animation-delay: 0.1s; }
+        .feature-item:nth-child(2) { animation-delay: 0.15s; }
+        .feature-item:nth-child(3) { animation-delay: 0.2s; }
+        .feature-item:nth-child(4) { animation-delay: 0.25s; }
+        .feature-item:nth-child(5) { animation-delay: 0.3s; }
+        .feature-item:nth-child(6) { animation-delay: 0.35s; }
+        
+        /* 移动端特定优化 */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .feature-item {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+            
+            .feature-title {
+                font-size: 1rem;
+            }
+            
+            .feature-desc {
+                font-size: 0.9rem;
+            }
+            
+            .agent-item {
+                padding: 15px;
+                min-height: 65px;
+            }
+            
+            .agent-name {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* 小屏幕手机优化 */
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .price-info {
+                font-size: 1rem;
+            }
+            
+            .purchase-button {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 主界面 -->
+        <div id="main-interface">
+            <header>
+                <h1>Mapleleaf</h1>
+                <div class="subtitle">强大的Minecraft客户端</div>
+                <div class="description">专为Minecraft玩家打造的高性能客户端，集成了众多实用功能，提供流畅、美观且强大的游戏体验</div>
+            </header>
+            
+            <hr>
+            
+            <section>
+                <h2>视觉与材质</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-title">原版 PVP 材质</div>
+                        <div class="feature-desc">专为PVP优化的原版风格材质，提供最佳视觉体验</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">美丽合金材质</div>
+                        <div class="feature-desc">下界合金装备拥有独特的材质设计，彰显尊贵身份</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">钻石物品渐变</div>
+                        <div class="feature-desc">钻石物品拥有美丽的渐变效果，更加炫酷夺目</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">渐变方块轮廓</div>
+                        <div class="feature-desc">方块轮廓采用渐变效果，更加美观且易于识别</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">Quasar UI</div>
+                        <div class="feature-desc">现代化的用户界面设计，操作流畅且直观</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">药水颜色变换</div>
+                        <div class="feature-desc">药水效果拥有独特的颜色变换，视觉效果更佳</div>
+                    </li>
+                </ul>
+            </section>
+            
+            <hr>
+            
+            <section>
+                <h2>便捷操作</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-title">一键丢弃</div>
+                        <div class="feature-desc">如同挂一般的一键丢弃功能，操作简单快捷</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">一键拿东西</div>
+                        <div class="feature-desc">快速获取物品的便捷功能，提升游戏效率</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">高级面板</div>
+                        <div class="feature-desc">功能丰富的高级控制面板，满足各种需求</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">一键穿装备</div>
+                        <div class="feature-desc">快速穿戴全套装备，节省宝贵时间</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">一键脱下</div>
+                        <div class="feature-desc">快速脱下所有装备，操作简单便捷</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">铁砧可换行</div>
+                        <div class="feature-desc">铁砧界面支持换行输入，命名更加自由</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">跑吃</div>
+                        <div class="feature-desc">跑步时也能吃东西，提升生存效率</div>
+                    </li>
+                </ul>
+            </section>
+            
+            <hr>
+            
+            <section>
+                <h2>透视与挖掘</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-title">实体透视</div>
+                        <div class="feature-desc">透过方块查看实体位置，掌握战场先机</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">箱子透视</div>
+                        <div class="feature-desc">查看箱子内部物品，资源管理更高效</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">可开关矿透</div>
+                        <div class="feature-desc">可随时开启/关闭的矿物透视，挖掘更轻松</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">电量挖掘</div>
+                        <div class="feature-desc">根据电量自动挖掘功能，工具使用更智能</div>
+                    </li>
+                </ul>
+            </section>
+            
+            <hr>
+            
+            <section>
+                <h2>PVP增强</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-title">盔甲变红</div>
+                        <div class="feature-desc">盔甲耐久低时变为红色警告，及时更换装备</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">受击光环</div>
+                        <div class="feature-desc">受到攻击时显示光环效果，视觉反馈更明显</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">受击维克托</div>
+                        <div class="feature-desc">独特的受击视觉效果，提升战斗沉浸感</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">受伤无抖动</div>
+                        <div class="feature-desc">受到伤害时屏幕不抖动，保持战斗稳定性</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">低火防挡视野</div>
+                        <div class="feature-desc">火焰效果不遮挡视野，保持清晰战场观察</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">低盾牌</div>
+                        <div class="feature-desc">盾牌不遮挡视野，防御同时保持观察</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">可切换触发方式防砍</div>
+                        <div class="feature-desc">多种触发方式防止被砍，保护账号安全</div>
+                    </li>
+                </ul>
+            </section>
+            
+            <hr>
+            
+            <section>
+                <h2>外观定制</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-title">美丽的物理披风</div>
+                        <div class="feature-desc">物理效果的披风，更加真实自然</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">可定制跳跃光环</div>
+                        <div class="feature-desc">自定义跳跃时的特效光环，展现个性风格</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">定制物理披风</div>
+                        <div class="feature-desc">可自定义的物理披风效果，打造独特外观</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">可定制美丽天空</div>
+                        <div class="feature-desc">自定义天空渲染效果，创造独特游戏环境</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">可替换材质包</div>
+                        <div class="feature-desc">支持自定义材质包替换，个性化游戏体验</div>
+                    </li>
+                </ul>
+            </section>
+            
+            <hr>
+            
+            <section>
+                <h2>安全与注入</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-title">支持注入</div>
+                        <div class="feature-desc">支持多种注入方式，安装简单便捷</div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-title">绕过 MD5</div>
+                        <div class="feature-desc">能够绕过MD5检测，保证客户端稳定运行</div>
+                    </li>
+                </ul>
+            </section>
+            
+            <div class="price-section">
+                <div class="price-info">售价: <span class="price-highlight">7r</span></div>
+                <div class="price-info">代理价: <span class="price-highlight">12r</span></div>
+                <div class="price-info">需要的购买请联系QQ</div>
+                
+                <button class="purchase-button" onclick="showAgentSelection()">联系</button>
+                
+                <div class="jump-tips">点击按钮将选择代理</div>
+            </div>
+            
+            <footer>
+                Mapleleaf © 2025 | 为您提供优质的游戏体验
+            </footer>
+        </div>
+        
+        <!-- 代理选择界面 -->
+        <div id="agent-selection" class="agent-selection">
+            <h2 class="agent-title">选择联系对象</h2>
+            
+            <div class="agent-list">
+                <div class="agent-item" onclick="redirectToQQ('3948591284')">
+                    <div class="agent-name">XiaoY</div>
+                    <div class="agent-role">制作人</div>
+                </div>
+                
+                <div class="agent-item" onclick="redirectToQQ('3885053580')">
+                    <div class="agent-name">墨染风华</div>
+                    <div class="agent-role">总代理</div>
+                </div>
+                
+                <div class="agent-item" onclick="redirectToQQ('3800898804')">
+                    <div class="agent-name">暗號</div>
+                    <div class="agent-role">总代理</div>
+                </div>
+                
+                <div class="agent-item" onclick="redirectToQQ('2921586116')">
+                    <div class="agent-name">白空</div>
+                    <div class="agent-role">总代理</div>
+                </div>
+                
+                <div class="agent-item" onclick="redirectToQQ('104096892')">
+                    <div class="agent-name">yv</div>
+                    <div class="agent-role">代理</div>
+                </div>
+                
+                <div class="agent-item" onclick="redirectToQQ('3477604103')">
+                    <div class="agent-name"></div>
+                    <div class="agent-role">代理</div>
+                </div>
+            </div>
+            
+            <button class="back-button" onclick="showMainInterface()">返回</button>
+            
+            <footer>
+                Mapleleaf © 2025 | XiaoY好香，好想🌿
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // 显示代理选择界面
+        function showAgentSelection() {
+            document.getElementById('main-interface').style.display = 'none';
+            document.getElementById('agent-selection').style.display = 'block';
+        }
+        
+        // 显示主界面
+        function showMainInterface() {
+            document.getElementById('agent-selection').style.display = 'none';
+            document.getElementById('main-interface').style.display = 'block';
+        }
+        
+        // 直接跳转到QQ
+        function redirectToQQ(qqNumber) {
+            // 尝试多种跳转方式
+            const schemes = [
+                `mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${qqNumber}`,
+                `mqq://card/show_pslcard?src_type=internal&version=1&uin=${qqNumber}`,
+                `tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=${qqNumber}`
+            ];
+            
+            let success = false;
+            
+            // 尝试每种方案
+            for (let scheme of schemes) {
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = scheme;
+                document.body.appendChild(iframe);
+                
+                setTimeout(() => {
+                    document.body.removeChild(iframe);
+                }, 100);
+            }
+            
+            // 设置超时，如果5秒后没有响应，显示备用方案
+            setTimeout(() => {
+                if (!success) {
+                    // 直接打开备用链接
+                    window.open(`https://wpa.qq.com/msgrd?v=3&uin=${qqNumber}&site=qq&menu=yes`, '_blank');
+                }
+            }, 5000);
+            
+            // 监听页面可见性变化，判断是否成功跳转
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    success = true;
+                }
+            });
+        }
+        
+        // 防止缩放但允许滚动
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('touchmove', function(e) {
+            if(e.scale !== 1 && e.scale !== undefined) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        document.addEventListener('wheel', function(e) {
+            if(e.ctrlKey) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        document.addEventListener('keydown', function(e) {
+            if(e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '0' || e.key === '=')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
